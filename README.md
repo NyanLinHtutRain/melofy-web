@@ -1,74 +1,98 @@
-# Startup - Free Next.js Startup Website Template
+# 🎵 Melofy – AI-Powered Spotify Playlist Generator
 
-Startup free, open-source, and premium-quality startup website template for Next.js comes with everything you need to launch a startup, business, or SaaS website, including all essential sections, components, and pages.
+Melofy is a smart web app that turns your vibe into a real Spotify playlist. Just describe how you feel (e.g., “Rainy and stoner vibes”), choose a duration, and let Melofy generate a full playlist with real tracks — then instantly sync it to your Spotify account.
 
-If you're looking for a high-quality and visually appealing, feature-rich Next.js Template for your next startup, SaaS, or business website, this is the perfect choice and starting point for you!
+Live soon at: [https://nyanlinhtut.com](https://nyanlinhtut.com)
 
-### ✨ Key Features
-- Crafted for Startup and SaaS Business
-- Next.js and Tailwind CSS
-- All Essential Business Sections and Pages
-- High-quality and Clean Design
-- Dark and Light Version
-- TypeScript Support
-and Much More ...
+---
 
-### 🙌 Detailed comparison between the Free and Pro versions of Startup
+## ✨ Features
 
-| Feature             | Free | Pro |
-|---------------------|------------|----------|
-| Next.js Landing Page             | ✅ Yes      | ✅ Yes      |
-| All The Integrations - Auth, DB, Payments, Blog and many more ...             | ❌ No      | ✅ Yes |
-| Homepage Variations             | 1      | 2 |
-| Additional SaaS Pages and Components             | ❌ No      | ✅ Yes |
-| Functional Blog with Sanity       | ❌ No      | ✅ Yes | ✅ Yes |
-| Use with Commercial Projects            | ✅ Yes      | ✅ Yes      |
-| Lifetime Free Updates             | ✅ Yes      | ✅ Yes |
-| Email Support       | ❌ No         | ✅ Yes       |
-| Community Support         | ✅ Yes         | ✅ Yes       |
+- 🧠 AI-generated song list using OpenAI
+- 🎧 Accurate track matching via Spotify Search API
+- ⏱️ Playlist duration matches your mood length (e.g., ~10 mins ≈ 3 songs)
+- ✅ One playlist per prompt, even if multiple moods are mentioned
+- 🌐 AWS Lambda + DynamoDB + API Gateway for serverless backend
+- 🔐 Spotify OAuth login to create real user playlists
+- 💾 Saved playlist history (temp + final)
+- 📦 Full-stack, production-ready and deployable to Vercel
 
+---
 
-### [🔥 Get Startup Pro](https://nextjstemplates.com/templates/saas-starter-startup)
+## 🛠️ Tech Stack
 
-[![Startup Pro](https://raw.githubusercontent.com/NextJSTemplates/startup-nextjs/main/startup-pro.webp)](https://nextjstemplates.com/templates/saas-starter-startup)
+### Frontend
+- Next.js 15 + React
+- Tailwind CSS (UI styling)
+- Spotify Web API (OAuth + playlist creation)
 
-Startup Pro - Expertly crafted for fully-functional, high-performing SaaS startup websites. Comes with with Authentication, Database, Blog, and all the essential integrations necessary for SaaS business sites.
+### Backend
+- AWS Lambda (Node.js)
+- API Gateway (REST)
+- DynamoDB (playlist storage)
+- OpenAI API (chat completions for playlist ideas)
 
+---
 
-### [🚀 View Free Demo](https://startup.nextjstemplates.com/)
+## 🔧 Key API Routes
 
-### [🚀 View Pro Demo](https://startup-pro.nextjstemplates.com/)
+| Route                  | Method | Description                           |
+|------------------------|--------|---------------------------------------|
+| `/api/login`           | GET    | Redirects to Spotify OAuth login      |
+| `/api/callback`        | GET    | Handles Spotify callback, syncs data  |
+| `/generate-playlist`   | POST   | Generates songs using OpenAI          |
+| `/prepare-playlist`    | POST   | Saves draft playlist to DynamoDB      |
+| `/get-playlist?id=...` | GET    | Fetches playlist from DynamoDB by ID  |
+| `/save-playlist`       | POST   | Saves final playlist to DynamoDB      |
 
-### [📦 Download](https://nextjstemplates.com/templates/startup)
+---
+## 🧪 How It Works
 
-### [🔥 Get Pro](https://nextjstemplates.com/templates/saas-starter-startup)
+1. User enters a *prompt*, e.g., `"study music while it's raining"` and chooses duration.
+2. Melofy uses OpenAI to generate a vibe-accurate list of songs.
+3. Songs are saved as a **draft** in DynamoDB.
+4. User is redirected to Spotify login.
+5. After login, Melofy:
+   - Fetches the draft.
+   - Matches songs using `track:{title} artist:{artist}`.
+   - Replaces missing tracks with similar ones if needed.
+   - Creates + fills a real Spotify playlist.
+6. Final playlist is saved + user is redirected to Spotify.
 
-### [🔌 Documentation](https://nextjstemplates.com/docs)
+---
 
-### ⚡ Deploy Now
+## 🚀 Deployment
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNextJSTemplates%2Fstartup-nextjs)
+Deployed via:
+- Vercel (Frontend)
+- AWS Lambda (Backend)
+- GitHub (Codebase)
+- Route 53 + Custom Domain (`nyanlinhtut.com`)
 
-[![Deploy with Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/NextJSTemplates/startup-nextjs)
+---
 
+## ✅ To-Do (Post-MVP Phase)
 
-### 📄 License
-Startup is 100% free and open-source, feel free to use with your personal and commercial projects.
+- Add Spotify user profile screen
+- Add public playlist gallery
+- Improve fallback search for non-English songs
+- Add user login system via AWS Cognito
+- Calibrate duration to match user input more precisely
+- Re-generate playlist option
+- Dashboard of previously generated playlists
 
-### 💜 Support
-If you like the template, please star this repository to inspire the team to create more stuff like this and reach more users like you!
+---
 
-### ✨ Explore and Download - Free [Next.js Templates](https://nextjstemplates.com)
+## 👨‍💻 Author
 
-### Update Log
+Created by [Nyan Lin Htut](https://nyanlinhtut.com)
 
-**10 April 2025**
-- Fix peer deps issue with Next.js 15
-- Upgrade to tailwind v4
-- Refactored blog cards for handling edge cases(text ellipsis on bio, keeping author details at the bottom etc.)
-- Re-wrote blog details page with icons separation, fallback author image and better markup.
-- Fixed duplicate key errors on homepage.
-- Separated icons on theme-switcher button, and refactored scroll-to-top button.
+- 💼 Business Analytics + AI Developer
+- ✉️ Contact: nyanlinhtutrain@gmail.com
+- 🌐 GitHub: [@NyanLinHtutRain](https://github.com/NyanLinHtutRain)
 
-**29 Jan 2025**
-- Upgraded to Next.js 15
+---
+
+## 📄 License
+
+MIT License © 2025
