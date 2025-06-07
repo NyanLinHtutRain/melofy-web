@@ -1,13 +1,13 @@
-"use client";
-
+// src/app/layout.tsx
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Inter } from "next/font/google";
-import "../styles/index.css";
+import "../styles/index.css"; // Ensure this path is correct and imports your global styles
+import { Providers } from "./providers"; // Your existing ThemeProvider
+import NextAuthSessionProvider from "./NextAuthSessionProvider"; // Your NextAuth session provider
 
 const inter = Inter({ subsets: ["latin"] });
-
 
 export default function RootLayout({
   children,
@@ -15,24 +15,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.js. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
-      <head />
-
+    <html lang="en" suppressHydrationWarning><head />
       <body className={`bg-[#FCFCFC] dark:bg-black ${inter.className}`}>
         <Providers>
-          <Header />
-          {children}
-          <Footer />
-          <ScrollToTop />
+          <NextAuthSessionProvider>
+            <Header />
+            {children}
+            <Footer />
+            <ScrollToTop />
+          </NextAuthSessionProvider>
         </Providers>
       </body>
     </html>
   );
 }
-
-import { Providers } from "./providers";
-

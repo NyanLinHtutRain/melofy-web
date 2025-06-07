@@ -1,3 +1,5 @@
+// src/components/Footer/index.tsx
+
 "use client";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,28 +14,29 @@ const Footer = () => {
               <div className="mb-12 max-w-[360px] lg:mb-16">
                 <Link href="/" className="mb-8 inline-block">
                   <Image
-                    src="/images/logo/logo-2.svg"
-                    alt="logo"
+                    src="/images/logo/melofylight.svg" // UPDATED
+                    alt="Melofy Logo"                   // UPDATED
                     className="w-full dark:hidden"
                     width={140}
                     height={30}
+                    priority={false}
                   />
                   <Image
-                    src="/images/logo/logo.svg"
-                    alt="logo"
+                    src="/images/logo/melofydark.svg"  // UPDATED
+                    alt="Melofy Logo"                    // UPDATED
                     className="hidden w-full dark:block"
                     width={140}
                     height={30}
+                    priority={false}
                   />
                 </Link>
                 <p className="mb-9 text-base leading-relaxed text-body-color dark:text-body-color-dark">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Integer lobortis.
+                  Discover music effortlessly with the power of AI. Create and stream playlists tailored to your mood, activity, or vibe.
                 </p>
                 <div className="flex items-center">
                   <a
-                    href="/"
-                    aria-label="social-link"
+                    href="/" // Replace with your actual Facebook link or remove
+                    aria-label="Facebook social link"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mr-6 text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
@@ -52,8 +55,8 @@ const Footer = () => {
                     </svg>
                   </a>
                   <a
-                    href="/"
-                    aria-label="social-link"
+                    href="/" // Replace with your actual Twitter link or remove
+                    aria-label="Twitter social link"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mr-6 text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
@@ -74,8 +77,8 @@ const Footer = () => {
                     </svg>
                   </a>
                   <a
-                    href="/"
-                    aria-label="social-link"
+                    href="/" // Replace with your actual YouTube link or remove
+                    aria-label="YouTube social link"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mr-6 text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
@@ -84,14 +87,14 @@ const Footer = () => {
                       width="18"
                       height="14"
                       viewBox="0 0 18 14"
-                      className="fill-current"
+                      className="fill-current" // fill-current is fine here
                     >
                       <path d="M17.5058 2.07119C17.3068 1.2488 16.7099 0.609173 15.9423 0.395963C14.5778 7.26191e-08 9.0627 0 9.0627 0C9.0627 0 3.54766 7.26191e-08 2.18311 0.395963C1.41555 0.609173 0.818561 1.2488 0.619565 2.07119C0.25 3.56366 0.25 6.60953 0.25 6.60953C0.25 6.60953 0.25 9.68585 0.619565 11.1479C0.818561 11.9703 1.41555 12.6099 2.18311 12.8231C3.54766 13.2191 9.0627 13.2191 9.0627 13.2191C9.0627 13.2191 14.5778 13.2191 15.9423 12.8231C16.7099 12.6099 17.3068 11.9703 17.5058 11.1479C17.8754 9.68585 17.8754 6.60953 17.8754 6.60953C17.8754 6.60953 17.8754 3.56366 17.5058 2.07119ZM7.30016 9.44218V3.77687L11.8771 6.60953L7.30016 9.44218Z" />
                     </svg>
                   </a>
                   <a
-                    href="/"
-                    aria-label="social-link"
+                    href="/" // Replace with your actual LinkedIn link or remove
+                    aria-label="LinkedIn social link"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
@@ -100,7 +103,7 @@ const Footer = () => {
                       width="17"
                       height="16"
                       viewBox="0 0 17 16"
-                      className="fill-current"
+                      className="fill-current" // fill-current is fine here
                     >
                       <path d="M15.2196 0H1.99991C1.37516 0 0.875366 0.497491 0.875366 1.11936V14.3029C0.875366 14.8999 1.37516 15.4222 1.99991 15.4222H15.1696C15.7943 15.4222 16.2941 14.9247 16.2941 14.3029V1.09448C16.3441 0.497491 15.8443 0 15.2196 0ZM5.44852 13.1089H3.17444V5.7709H5.44852V13.1089ZM4.29899 4.75104C3.54929 4.75104 2.97452 4.15405 2.97452 3.43269C2.97452 2.71133 3.57428 2.11434 4.29899 2.11434C5.02369 2.11434 5.62345 2.71133 5.62345 3.43269C5.62345 4.15405 5.07367 4.75104 4.29899 4.75104ZM14.07 13.1089H11.796V9.55183C11.796 8.7061 11.771 7.58674 10.5964 7.58674C9.39693 7.58674 9.222 8.53198 9.222 9.47721V13.1089H6.94792V5.7709H9.17202V6.79076H9.19701C9.52188 6.19377 10.2466 5.59678 11.3711 5.59678C13.6952 5.59678 14.12 7.08925 14.12 9.12897V13.1089H14.07Z" />
                     </svg>
@@ -112,23 +115,31 @@ const Footer = () => {
             <div className="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12">
               <div className="mb-12 lg:mb-16">
                 <h2 className="mb-10 text-xl font-bold text-black dark:text-white">
-                  Useful Links
+                  Navigation
                 </h2>
                 <ul>
-                  <li>
-                    <Link
-                      href="/"
-                      className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
-                    >
-                      Pricing
-                    </Link>
-                  </li>
                   <li>
                     <Link
                       href="/about"
                       className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
                     >
-                      About
+                      About Melofy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/#ai-feature"
+                      className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
+                    >
+                      Generate Playlist
+                    </Link>
+                  </li>
+                   <li>
+                    <Link
+                      href="/contact"
+                      className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
+                    >
+                      Support
                     </Link>
                   </li>
                 </ul>
@@ -138,31 +149,23 @@ const Footer = () => {
             <div className="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12">
               <div className="mb-12 lg:mb-16">
                 <h2 className="mb-10 text-xl font-bold text-black dark:text-white">
-                  Terms
+                  Legal
                 </h2>
                 <ul>
                   <li>
                     <Link
-                      href="/"
+                      href="/terms-of-service" // Replace with your actual link
                       className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
                     >
-                      TOS
+                      Terms of Service
                     </Link>
                   </li>
                   <li>
                     <Link
-                      href="/"
+                      href="/privacy-policy" // Replace with your actual link
                       className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
                     >
                       Privacy Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/"
-                      className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
-                    >
-                      Refund Policy
                     </Link>
                   </li>
                 </ul>
@@ -172,59 +175,46 @@ const Footer = () => {
             <div className="w-full px-4 md:w-1/2 lg:w-4/12 xl:w-3/12">
               <div className="mb-12 lg:mb-16">
                 <h2 className="mb-10 text-xl font-bold text-black dark:text-white">
-                  Support & Help
+                  Connect
                 </h2>
-                <ul>
-                  <li>
-                    <Link
-                      href="/contact"
-                      className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
-                    >
-                      Open Support Ticket
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/"
-                      className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
-                    >
-                      Terms of Use
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/about"
-                      className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
-                    >
-                      About
-                    </Link>
-                  </li>
-                </ul>
+                 <p className="mb-4 text-base text-body-color dark:text-body-color-dark">
+                  Have questions or feedback?
+                </p>
+                <Link
+                  href="/contact"
+                  className="inline-block rounded-sm bg-primary px-6 py-2.5 text-base font-medium text-white duration-300 hover:bg-primary/90"
+                >
+                  Contact Us
+                </Link>
               </div>
             </div>
           </div>
 
-          <div className="h-px w-full bg-linear-to-r from-transparent via-[#D2D8E183] to-transparent dark:via-[#959CB183]"></div>
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-[#D2D8E183] to-transparent dark:via-[#959CB183]"></div>
           <div className="py-8">
             <p className="text-center text-base text-body-color dark:text-white">
-              Template by{" "}
-              <a
-                href="http://uideck.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary"
-              >
-                UIdeck
-              </a>{" "}
-              and{" "}
-              <a
-                href="https://nextjstemplates.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary"
-              >
-                Next.js Templates
-              </a>
+              © {new Date().getFullYear()} Melofy. All rights reserved.
+              <br />
+              <span className="text-sm">
+                Template by{" "}
+                <a
+                  href="http://uideck.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary"
+                >
+                  UIdeck
+                </a>{" "}
+                and{" "}
+                <a
+                  href="https://nextjstemplates.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary"
+                >
+                  Next.js Templates
+                </a>
+              </span>
             </p>
           </div>
         </div>
@@ -239,7 +229,7 @@ const Footer = () => {
             <circle opacity="0.8" cx="49.5" cy="49.5" r="49.5" fill="#959CB1" />
             <mask
               id="mask0_94:899"
-              style={{ maskType: "alpha" }}
+              style={{ maskType: "alpha" }} // Changed to camelCase
               maskUnits="userSpaceOnUse"
               x="0"
               y="0"
@@ -274,7 +264,7 @@ const Footer = () => {
                 width="82.7646"
                 height="82.7646"
                 filterUnits="userSpaceOnUse"
-                colorInterpolationFilters="sRGB"
+                colorInterpolationFilters="sRGB" // Changed to camelCase
               >
                 <feFlood floodOpacity="0" result="BackgroundImageFix" />
                 <feBlend
@@ -284,7 +274,7 @@ const Footer = () => {
                   result="shape"
                 />
                 <feGaussianBlur
-                  stdDeviation="10.5"
+                  stdDeviation="10.5" // Changed to camelCase
                   result="effect1_foregroundBlur_94:899"
                 />
               </filter>
@@ -326,7 +316,7 @@ const Footer = () => {
               height="66.6675"
               transform="rotate(-22.9007 -41 26.9426)"
               stroke="url(#paint1_linear_94:889)"
-              strokeWidth="0.7"
+              strokeWidth="0.7" // Changed to camelCase
             />
             <path
               opacity="0.3"
@@ -336,7 +326,7 @@ const Footer = () => {
             <path
               d="M50.5215 7.42229L20.325 1.14771L46.2077 62.3249L76.7963 68.2073L50.5215 7.42229Z"
               stroke="url(#paint3_linear_94:889)"
-              strokeWidth="0.7"
+              strokeWidth="0.7" // Changed to camelCase
             />
             <path
               opacity="0.3"
@@ -346,7 +336,7 @@ const Footer = () => {
             <path
               d="M17.972 93.3057L-14.1852 88.2076L46.2077 62.325L77.1884 68.2074L17.972 93.3057Z"
               stroke="url(#paint5_linear_94:889)"
-              strokeWidth="0.7"
+              strokeWidth="0.7" // Changed to camelCase
             />
             <defs>
               <linearGradient

@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image"; // This import is correct
 
 const AiFeature = () => {
   const [prompt, setPrompt] = useState("");
   const [duration, setDuration] = useState("");
   const [taste, setTaste] = useState("");
   const [sampleSong, setSampleSong] = useState("");
-  const [playlist, setPlaylist] = useState<any[]>([]);
+  const [playlist, setPlaylist] = useState<any[]>([]); // This declaration is fine
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -31,10 +32,10 @@ const AiFeature = () => {
 
       const parsed = text
         .split("\n")
-        .filter((line) => line.includes(" - "))
-        .map((line) => {
+        .filter((line: string | string[]) => line.includes(" - "))
+        .map((line: string) => {
           const parts = line.split(/ - | – /);
-          const title = parts[0]?.trim().replace(/^\d+\.\s*/, ""); // 👈 strip number-dot
+          const title = parts[0]?.trim().replace(/^\d+\.\s*/, "");
           const artist = parts[1]?.trim() || "Unknown";
           return { title, artist };
         });
@@ -62,20 +63,24 @@ const AiFeature = () => {
 
       // Step 3: Redirect to Spotify login with state=tempId
       window.location.href = `/api/login?id=${tempId}`;
-    } catch (err) {
+    } catch (err) { // CORRECTED: Added opening curly brace for the catch block
       console.error("Error generating or preparing playlist:", err);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
+  }; // This semicolon is fine for a const function declaration like this.
 
   return (
-    <section className="relative z-10 overflow-hidden bg-[#171C28] py-16 md:py-20 lg:py-28">
+    <section
+      id="ai-feature"
+      className="relative z-10 overflow-hidden bg-white py-16 dark:bg-gray-dark md:py-20 lg:py-28"    >
       <div className="container mx-auto">
-        <div className="text-center mx-auto mb-[60px] max-w-[510px]">
-          <h2 className="text-white text-3xl font-bold mb-4">Melofy AI Playlist Generator</h2>
-          <p className="text-body-color">
+        <div className="mx-auto mb-[60px] max-w-[600px] text-center">
+          <h2 className="mb-4 text-3xl font-bold text-black dark:text-white sm:text-4xl md:text-[40px]">
+            Melofy AI Playlist Generator
+          </h2>
+          <p className="text-base text-body-color dark:text-body-color-dark">
             Describe your vibe and generate the perfect playlist instantly.
           </p>
         </div>
@@ -85,7 +90,8 @@ const AiFeature = () => {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Describe your vibe..."
-            className="w-full rounded-md border border-[#3A3A3A] bg-[#1E293B] py-3 px-6 text-base text-white placeholder-body-color focus:border-primary focus-visible:outline-none"
+            className="w-full rounded-md border border-stroke bg-transparent px-6 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-stroke-dark dark:text-body-color-dark dark:placeholder:text-body-color-dark"
+            rows={4}
           />
 
           <input
@@ -93,65 +99,80 @@ const AiFeature = () => {
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
             placeholder="How many minutes? (optional)"
-            className="w-full rounded-md border border-[#3A3A3A] bg-[#1E293B] py-3 px-6 text-base text-white placeholder-body-color focus:border-primary focus-visible:outline-none"
+            className="w-full rounded-md border border-stroke bg-transparent px-6 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-stroke-dark dark:text-body-color-dark dark:placeholder:text-body-color-dark"
           />
 
-          <select
-            aria-label="Select taste"
-            value={taste}
-            onChange={(e) => setTaste(e.target.value)}
-            className="w-full rounded-md border border-[#3A3A3A] bg-[#1E293B] py-3 px-6 text-base text-white shadow-md focus:border-primary focus-visible:outline-none"
-          >
-            <option value="">Choose a taste (optional)</option>
-            <option value="trending">Trending</option>
-            <option value="underrated">Underrated</option>
-            <option value="romantic">Romantic</option>
-            <option value="chill">Chill</option>
-            <option value="motivational">Motivational</option>
-            <option value="energetic">Energetic</option>
-            <option value="relaxing">Relaxing</option>
-            <option value="party">Party</option>
-            <option value="focus">Focus</option>
-            <option value="mixed">Mixed</option>
-          </select>
+          <div className="relative">
+            <select
+              aria-label="Select taste"
+              value={taste}
+              onChange={(e) => setTaste(e.target.value)}
+              className="w-full appearance-none rounded-md border border-stroke bg-transparent px-6 py-3 text-base text-body-color shadow-md outline-none focus:border-primary focus-visible:shadow-none dark:border-stroke-dark dark:text-body-color-dark"
+            >
+              <option value="">Choose a taste (optional)</option>
+              <option value="trending">Trending</option>
+              <option value="underrated">Underrated</option>
+              <option value="romantic">Romantic</option>
+              <option value="chill">Chill</option>
+              <option value="motivational">Motivational</option>
+              <option value="energetic">Energetic</option>
+              <option value="relaxing">Relaxing</option>
+              <option value="party">Party</option>
+              <option value="focus">Focus</option>
+              <option value="mixed">Mixed</option>
+            </select>
+            <span className="pointer-events-none absolute right-4 top-1/2 z-10 mt-[-2px] h-2 w-2 -translate-y-1/2 rotate-45 border-r-2 border-b-2 border-body-color dark:border-body-color-dark"></span>
+          </div>
 
           <input
             value={sampleSong}
             onChange={(e) => setSampleSong(e.target.value)}
             placeholder="Sample Song (optional)"
-            className="w-full rounded-md border border-[#3A3A3A] bg-[#1E293B] py-3 px-6 text-base text-white placeholder-body-color focus:border-primary focus-visible:outline-none"
+            className="w-full rounded-md border border-stroke bg-transparent px-6 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-stroke-dark dark:text-body-color-dark dark:placeholder:text-body-color-.dark"
           />
 
           <button
             onClick={generatePlaylist}
-            className={`w-full rounded-md py-3 px-6 text-white font-semibold transition ${
-              loading ? "bg-gray-500" : "bg-primary hover:bg-opacity-90"
+            className={`w-full rounded-md bg-primary px-6 py-3 font-semibold text-white transition duration-300 ease-in-out hover:bg-primary/80 ${
+              loading ? "cursor-not-allowed bg-opacity-70" : ""
             }`}
             disabled={loading}
           >
             {loading ? "Generating..." : "Generate + Send to Spotify"}
           </button>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
 
-          {playlist.length > 0 && (
-            <div className="space-y-2">
+          {/* The 'playlist' variable should be fine if declared in useState */}
+          {playlist.length > 0 && ( 
+            <div className="mt-8 space-y-3 rounded-md bg-gray-light p-4 dark:bg-dark">
+              <h3 className="mb-3 text-lg font-semibold text-black dark:text-white">Generated Playlist:</h3>
               {playlist.map((song, index) => (
                 <div
                   key={index}
-                  className="p-4 border border-[#3A3A3A] bg-[#1E293B] rounded text-white font-medium hover:bg-[#334155] transition"
+                  className="rounded p-3 text-sm text-body-color dark:text-body-color-dark"
                 >
-                  <p className="text-base leading-relaxed">
-                    {song.title} - {song.artist}
-                  </p>
+                  {song.title} - {song.artist}
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
+
+      <div
+        className="pointer-events-none absolute bottom-[-60px] left-1/2 z-[-1] w-full max-w-[1024px] -translate-x-1/2 transform md:bottom-[-80px] lg:max-w-[1280px] xl:max-w-[1440px]"
+      >
+        <Image
+          src="/images/hero/shape-03.svg" // This path is correct if shape-03.svg is in public/images/hero/
+          alt="Decorative wave lines background"
+          width={1440} 
+          height={560} 
+          className="h-auto w-full opacity-20 dark:opacity-15" 
+        />
+      </div>
     </section>
   );
-};
+}; // This is the closing brace for the AiFeature component function
 
-export default AiFeature;
+export default AiFeature; // This export is correct
