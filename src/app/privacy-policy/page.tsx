@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+
 // src/app/privacy-policy/page.tsx
 
 import Breadcrumb from "@/components/Common/Breadcrumb";
