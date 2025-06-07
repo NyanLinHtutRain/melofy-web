@@ -10,7 +10,7 @@ const mockUsers = [
   { id: "1", name: "Demo User", email: "user@example.com", password: "password123" },
 ];
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
