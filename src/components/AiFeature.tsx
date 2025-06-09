@@ -1,26 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image"; // This import is correct
+import Image from "next/image";
 
 const AiFeature = () => {
   const [prompt, setPrompt] = useState("");
   const [duration, setDuration] = useState("");
   const [taste, setTaste] = useState("");
   const [sampleSong, setSampleSong] = useState("");
-  const [playlist, setPlaylist] = useState<any[]>([]); // This declaration is fine
+  const [playlist, setPlaylist] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [tempId, setTempId] = useState(""); // NEW
+  const [tempId, setTempId] = useState("");
+  const [loadingPublicSync, setLoadingPublicSync] = useState(false); // NEW
 
   const generatePlaylist = async () => {
     setLoading(true);
     setPlaylist([]);
     setError("");
-    setTempId(""); // Reset tempId at start
+    setTempId("");
 
     try {
-      // Step 1: Call OpenAI backend to generate playlist
       const res = await fetch("https://nlwpifw1n2.execute-api.us-east-1.amazonaws.com/prod/generate-playlist", {
         method: "POST",
         headers: {
@@ -44,7 +44,6 @@ const AiFeature = () => {
 
       setPlaylist(parsed);
 
-      // Step 2: Save to DynamoDB before Spotify login
       const prepare = await fetch("https://nlwpifw1n2.execute-api.us-east-1.amazonaws.com/prod/prepare-playlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -62,12 +61,49 @@ const AiFeature = () => {
       }
 
       const tempId = prepareData.tempId;
-      setTempId(tempId); // NEW → store tempId instead of auto-redirect
+      setTempId(tempId);
     } catch (err) {
       console.error("Error generating or preparing playlist:", err);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // New helper function for Public Sync with popup fix + loading lock
+  const handlePublicSync = async () => {
+    if (!tempId || loadingPublicSync) return;
+
+    setLoadingPublicSync(true);
+    const newWindow = window.open("", "_blank"); // Open window immediately → not blocked
+    // Show Loading message immediately
+    newWindow!.document.write(`
+      <html>
+        <head><title>Creating your playlist...</title></head>
+        <body style="font-family: sans-serif; text-align: center; padding-top: 100px;">
+          <h2>🎵 Creating your playlist...</h2>
+          <p>Please wait a moment, this can take 5 to 10 seconds.</p>
+        </body>
+      </html>
+    `);
+
+
+    try {
+      const res = await fetch(`/api/public-sync?id=${tempId}`);
+      const data = await res.json();
+
+      if (data.publicSpotifyUrl) {
+        newWindow!.location.href = data.publicSpotifyUrl;
+      } else {
+        newWindow!.close();
+        alert("Failed to create public playlist.");
+      }
+    } catch (err) {
+      console.error("Public sync error:", err);
+      newWindow!.close();
+      alert("Error creating public playlist.");
+    } finally {
+      setLoadingPublicSync(false);
     }
   };
 
@@ -161,23 +197,13 @@ const AiFeature = () => {
           {tempId && (
             <div className="mt-6 space-y-4">
               <button
-                onClick={async () => {
-                  try {
-                    const res = await fetch(`/api/public-sync?id=${tempId}`);
-                    const data = await res.json();
-                    if (data.publicSpotifyUrl) {
-                      window.open(data.publicSpotifyUrl, "_blank");
-                    } else {
-                      alert("Failed to create public playlist.");
-                    }
-                  } catch (err) {
-                    console.error("Public sync error:", err);
-                    alert("Error creating public playlist.");
-                  }
-                }}
-                className="w-full rounded-md bg-green-600 px-6 py-3 font-semibold text-white transition duration-300 ease-in-out hover:bg-green-700"
+                onClick={handlePublicSync}
+                className={`w-full rounded-md bg-green-600 px-6 py-3 font-semibold text-white transition duration-300 ease-in-out hover:bg-green-700 ${
+                  loadingPublicSync ? "cursor-not-allowed bg-opacity-70" : ""
+                }`}
+                disabled={loadingPublicSync}
               >
-                View Public Playlist
+                {loadingPublicSync ? "Creating Public Playlist..." : "View Public Playlist"}
               </button>
 
               <button
