@@ -11,11 +11,13 @@ const AiFeature = () => {
   const [playlist, setPlaylist] = useState<any[]>([]); // This declaration is fine
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [tempId, setTempId] = useState(""); // NEW
 
   const generatePlaylist = async () => {
     setLoading(true);
     setPlaylist([]);
     setError("");
+    setTempId(""); // Reset tempId at start
 
     try {
       // Step 1: Call OpenAI backend to generate playlist
@@ -60,21 +62,20 @@ const AiFeature = () => {
       }
 
       const tempId = prepareData.tempId;
-
-      // Step 3: Redirect to Spotify login with state=tempId
-      window.location.href = `/api/login?id=${tempId}`;
-    } catch (err) { // CORRECTED: Added opening curly brace for the catch block
+      setTempId(tempId); // NEW → store tempId instead of auto-redirect
+    } catch (err) {
       console.error("Error generating or preparing playlist:", err);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
-  }; // This semicolon is fine for a const function declaration like this.
+  };
 
   return (
     <section
       id="ai-feature"
-      className="relative z-10 overflow-hidden bg-white py-16 dark:bg-gray-dark md:py-20 lg:py-28"    >
+      className="relative z-10 overflow-hidden bg-white py-16 dark:bg-gray-dark md:py-20 lg:py-28"
+    >
       <div className="container mx-auto">
         <div className="mx-auto mb-[60px] max-w-[600px] text-center">
           <h2 className="mb-4 text-3xl font-bold text-black dark:text-white sm:text-4xl md:text-[40px]">
@@ -128,7 +129,7 @@ const AiFeature = () => {
             value={sampleSong}
             onChange={(e) => setSampleSong(e.target.value)}
             placeholder="Sample Song (optional)"
-            className="w-full rounded-md border border-stroke bg-transparent px-6 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-stroke-dark dark:text-body-color-dark dark:placeholder:text-body-color-.dark"
+            className="w-full rounded-md border border-stroke bg-transparent px-6 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-stroke-dark dark:text-body-color-dark dark:placeholder:text-body-color-dark"
           />
 
           <button
@@ -138,13 +139,12 @@ const AiFeature = () => {
             }`}
             disabled={loading}
           >
-            {loading ? "Generating..." : "Generate + Send to Spotify"}
+            {loading ? "Generating..." : "Generate Playlist"}
           </button>
 
           {error && <p className="text-sm text-red-500">{error}</p>}
 
-          {/* The 'playlist' variable should be fine if declared in useState */}
-          {playlist.length > 0 && ( 
+          {playlist.length > 0 && (
             <div className="mt-8 space-y-3 rounded-md bg-gray-light p-4 dark:bg-dark">
               <h3 className="mb-3 text-lg font-semibold text-black dark:text-white">Generated Playlist:</h3>
               {playlist.map((song, index) => (
@@ -157,6 +157,39 @@ const AiFeature = () => {
               ))}
             </div>
           )}
+
+          {tempId && (
+            <div className="mt-6 space-y-4">
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await fetch(`/api/public-sync?id=${tempId}`);
+                    const data = await res.json();
+                    if (data.publicSpotifyUrl) {
+                      window.open(data.publicSpotifyUrl, "_blank");
+                    } else {
+                      alert("Failed to create public playlist.");
+                    }
+                  } catch (err) {
+                    console.error("Public sync error:", err);
+                    alert("Error creating public playlist.");
+                  }
+                }}
+                className="w-full rounded-md bg-green-600 px-6 py-3 font-semibold text-white transition duration-300 ease-in-out hover:bg-green-700"
+              >
+                View Public Playlist
+              </button>
+
+              <button
+                onClick={() => {
+                  window.location.href = `/api/login?id=${tempId}`;
+                }}
+                className="w-full rounded-md bg-blue-600 px-6 py-3 font-semibold text-white transition duration-300 ease-in-out hover:bg-blue-700"
+              >
+                Export to My Spotify
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -164,15 +197,15 @@ const AiFeature = () => {
         className="pointer-events-none absolute bottom-[-60px] left-1/2 z-[-1] w-full max-w-[1024px] -translate-x-1/2 transform md:bottom-[-80px] lg:max-w-[1280px] xl:max-w-[1440px]"
       >
         <Image
-          src="/images/hero/shape-03.svg" // This path is correct if shape-03.svg is in public/images/hero/
+          src="/images/hero/shape-03.svg"
           alt="Decorative wave lines background"
-          width={1440} 
-          height={560} 
-          className="h-auto w-full opacity-20 dark:opacity-15" 
+          width={1440}
+          height={560}
+          className="h-auto w-full opacity-20 dark:opacity-15"
         />
       </div>
     </section>
   );
-}; // This is the closing brace for the AiFeature component function
+};
 
-export default AiFeature; // This export is correct
+export default AiFeature;
