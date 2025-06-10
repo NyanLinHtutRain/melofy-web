@@ -179,43 +179,53 @@ const AiFeature = () => {
           </button>
 
           {error && <p className="text-sm text-red-500">{error}</p>}
-
+          
           {playlist.length > 0 && (
-            <div className="mt-8 space-y-3 rounded-md bg-gray-light p-4 dark:bg-dark">
-              <h3 className="mb-3 text-lg font-semibold text-black dark:text-white">Generated Playlist:</h3>
-              {playlist.map((song, index) => (
-                <div
-                  key={index}
-                  className="rounded p-3 text-sm text-body-color dark:text-body-color-dark"
-                >
-                  {song.title} - {song.artist}
-                </div>
-              ))}
+            <div className="mt-8 space-y-7 rounded-md bg-gray-light p-4 dark:bg-dark">
+              <h3 className="mb-4 text-xl font-bold text-black dark:text-white">Generated Playlist:</h3>
+              <ol className="list-decimal pl-5 space-y-7 text-body-color dark:text-body-color-dark">
+                {playlist.map((song, index) => (
+                  <li key={index} className="rounded text-base text-black dark:text-white">
+                    {song.title} - {song.artist}
+                  </li>
+                ))}
+              </ol>
             </div>
           )}
 
           {tempId && (
             <div className="mt-6 space-y-4">
-              <button
-                onClick={handlePublicSync}
-                className={`w-full rounded-md bg-green-600 px-6 py-3 font-semibold text-white transition duration-300 ease-in-out hover:bg-green-700 ${
-                  loadingPublicSync ? "cursor-not-allowed bg-opacity-70" : ""
-                }`}
-                disabled={loadingPublicSync}
-              >
-                {loadingPublicSync ? "Creating Public Playlist..." : "View Public Playlist"}
-              </button>
+              <div className="space-y-1">
+                <button
+                  onClick={handlePublicSync}
+                  className={`w-full rounded-md bg-green-600 px-6 py-3 font-semibold text-white transition duration-300 ease-in-out hover:bg-green-700 ${
+                    loadingPublicSync ? "cursor-not-allowed bg-opacity-70" : ""
+                  }`}
+                  disabled={loadingPublicSync}
+                >
+                  {loadingPublicSync ? "Creating Public Playlist..." : "View Playlist On Spotify"}
+                </button>
+                <p className="text-center text-xs text-body-color dark:text-body-color-dark">
+                  For all users — no account required
+                </p>
+              </div>
 
-              <button
-                onClick={() => {
-                  window.location.href = `/api/login?id=${tempId}`;
-                }}
-                className="w-full rounded-md bg-blue-600 px-6 py-3 font-semibold text-white transition duration-300 ease-in-out hover:bg-blue-700"
-              >
-                Export to My Spotify
-              </button>
+              <div className="space-y-1">
+                <button
+                  onClick={() => {
+                    window.location.href = `/api/login?id=${tempId}`;
+                  }}
+                  className="w-full rounded-md bg-blue-600 px-6 py-3 font-semibold text-white transition duration-300 ease-in-out hover:bg-blue-700"
+                >
+                  Export to My Spotify
+                </button>
+                <p className="text-center text-xs text-body-color dark:text-body-color-dark">
+                  Limited access — contact Melofy to request access
+                </p>
+              </div>
             </div>
           )}
+
         </div>
       </div>
 
