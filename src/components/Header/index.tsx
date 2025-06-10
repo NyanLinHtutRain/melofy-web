@@ -13,7 +13,6 @@ const Header = () => {
   const isLoadingAuth = status === "loading";
   const isAuthenticated = status === "authenticated";
 
-  // Client-side only state to prevent hydration mismatch for auth UI
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
@@ -30,7 +29,7 @@ const Header = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleStickyNavbar);
     return () => window.removeEventListener("scroll", handleStickyNavbar);
-  }, []); // isMounted is not needed here
+  }, []);
 
   const [openIndex, setOpenIndex] = useState(-1);
   const handleSubmenu = (index: number) => {
@@ -38,6 +37,10 @@ const Header = () => {
   };
 
   const usePathName = usePathname();
+
+  // Define common classes for mobile menu items
+  const mobileMenuItemClass = `block py-2 text-base text-dark hover:text-primary dark:text-white/70 dark:hover:text-white`;
+  const mobileMenuButtonClass = `w-full text-left ${mobileMenuItemClass}`; // For button to look like link
 
   return (
     <>
@@ -56,6 +59,7 @@ const Header = () => {
                 className={`header-logo block w-full ${
                   sticky ? "py-3 lg:py-1" : "py-4"
                 } `}
+                onClick={() => setNavbarOpen(false)} // Close menu on logo click
               >
                 <Image
                   src="/images/logo/melofylight.svg"
@@ -97,10 +101,11 @@ const Header = () => {
                 >
                   <ul className="block lg:flex lg:space-x-12">
                     {menuData.map((menuItem, index) => (
-                      <li key={index} className="group relative">
+                      <li key={menuItem.id} className="group relative"> {/* Use menuItem.id for key */}
                         {menuItem.path ? (
                           <Link
                             href={menuItem.path}
+                            onClick={() => setNavbarOpen(false)} // Close menu on link click
                             className={`flex py-2 text-base lg:mr-0 lg:inline-flex lg:px-0 ${
                               sticky ? "lg:py-2" : "lg:py-4"
                             } ${
@@ -129,10 +134,11 @@ const Header = () => {
                                 openIndex === index ? "block" : "hidden"
                               }`}
                             >
-                              {menuItem.submenu && menuItem.submenu.map((submenuItem, subIndex) => (
+                              {menuItem.submenu && menuItem.submenu.map((submenuItem) => ( // Use submenuItem.id
                               <Link
                                 href={submenuItem.path || "#"}
-                                key={subIndex}
+                                key={submenuItem.id} // Use submenuItem.id for key
+                                onClick={() => setNavbarOpen(false)} // Close menu on link click
                                 className="text-dark hover:text-primary block rounded-sm py-2.5 text-sm lg:px-3 dark:text-white/70 dark:hover:text-white"
                               >
                                 {submenuItem.title}
@@ -143,13 +149,64 @@ const Header = () => {
                         )}
                       </li>
                     ))}
+
+                    {/* START: Conditional Mobile Menu Items for Authenticated Users */}
+                    {isMounted && !isLoadingAuth && isAuthenticated && (
+                      <>
+                        <li className="lg:hidden"> {/* Only show in mobile menu */}
+                          <Link
+                            href="/profile"
+                            onClick={() => setNavbarOpen(false)}
+                            className={mobileMenuItemClass}
+                          >
+                            Profile ({session.user?.name?.split(' ')[0] || session.user?.email?.split('@')[0]})
+                          </Link>
+                        </li>
+                        <li className="lg:hidden"> {/* Only show in mobile menu */}
+                          <button
+                            onClick={() => {
+                              signOut({ callbackUrl: '/' });
+                              setNavbarOpen(false);
+                            }}
+                            className={mobileMenuButtonClass}
+                          >
+                            Sign Out
+                          </button>
+                        </li>
+                      </>
+                    )}
+                    {/* END: Conditional Mobile Menu Items */}
+
+                    {/* START: Conditional Mobile Menu Items for Unauthenticated Users */}
+                    {isMounted && !isLoadingAuth && !isAuthenticated && (
+                        <>
+                            <li className="lg:hidden"> {/* Only show in mobile menu */}
+                                <Link
+                                    href="/signin"
+                                    onClick={() => setNavbarOpen(false)}
+                                    className={mobileMenuItemClass}
+                                >
+                                    Sign In
+                                </Link>
+                            </li>
+                            <li className="lg:hidden"> {/* Only show in mobile menu */}
+                                <Link
+                                    href="/signup"
+                                    onClick={() => setNavbarOpen(false)}
+                                    className={mobileMenuItemClass}
+                                >
+                                    Sign Up
+                                </Link>
+                            </li>
+                        </>
+                    )}
+                    {/* END: Conditional Mobile Menu Items for Unauthenticated Users */}
                   </ul>
                 </nav>
               </div>
               
-              {/* Authentication Buttons Section */}
+              {/* Authentication Buttons Section (Desktop) */}
               <div className="flex items-center justify-end pr-16 lg:pr-0">
-                {/* Only render auth-dependent UI after client has mounted and auth status is known */}
                 {isMounted && !isLoadingAuth && isAuthenticated && session?.user && (
                   <>
                     {session.user.image && (
@@ -158,18 +215,18 @@ const Header = () => {
                         alt={session.user.name || "User avatar"} 
                         width={28} 
                         height={28} 
-                        className="mr-2 hidden rounded-full md:block" 
+                        className="mr-2 hidden rounded-full md:block" // md:block ensures it's hidden on mobile
                       />
                     )}
                     <Link 
                       href="/profile" 
-                      className="mr-3 hidden whitespace-nowrap px-4 py-2 text-sm font-medium text-dark hover:text-primary dark:text-white dark:hover:text-primary md:block"
+                      className="mr-3 hidden whitespace-nowrap px-4 py-2 text-sm font-medium text-dark hover:text-primary dark:text-white dark:hover:text-primary md:block" // md:block
                     >
                       {session.user.name || session.user.email?.split('@')[0]}
                     </Link>
                     <button
                       onClick={() => signOut({ callbackUrl: '/' })}
-                      className="hidden rounded-sm bg-primary px-5 py-2.5 text-sm font-medium text-white shadow-btn duration-300 ease-in-out hover:bg-primary/90 hover:shadow-btn-hover md:block"
+                      className="hidden rounded-sm bg-primary px-5 py-2.5 text-sm font-medium text-white shadow-btn duration-300 ease-in-out hover:bg-primary/90 hover:shadow-btn-hover md:block" // md:block
                     >
                       Sign Out
                     </button>
@@ -185,10 +242,8 @@ const Header = () => {
                     </Link>
                   </>
                 )}
-                {/* Placeholder for loading state or when not mounted to prevent layout shift */}
                 {(!isMounted || isLoadingAuth) && (
-                    <div className="hidden h-[42px] items-center md:flex"> {/* Approx height of Sign In + Sign Up buttons area */}
-                        {/* You can put invisible placeholders or a lightweight spinner here */}
+                    <div className="hidden h-[42px] items-center md:flex"> 
                         <div className="px-7 py-3 opacity-0">Sign In</div>
                         <div className="px-8 py-3 opacity-0">Sign Up</div>
                     </div>
