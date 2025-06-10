@@ -1,94 +1,148 @@
 # 🎵 Melofy – AI-Powered Spotify Playlist Generator
 
-Melofy is a smart web app that turns your vibe into a real Spotify playlist. Just describe how you feel (e.g., “Rainy and stoner vibes”), choose a duration, and let Melofy generate a full playlist with real tracks — then instantly sync it to your Spotify account.
+**Melofy** is an AI-powered web app that transforms your mood into a real Spotify playlist.  
+Just describe how you feel — e.g., `"Rainy and stoner vibes"`, choose a duration — and Melofy generates a curated playlist with real Spotify tracks, perfectly matched to your vibe and synced to your Spotify account.
 
-Live soon at: [https://nyanlinhtut.com](https://nyanlinhtut.com)
+👉 **Live at:** [https://www.melofyapp.com](https://www.melofyapp.com)
 
 ---
 
-## ✨ Features
+## ✨ Current Features
 
-- 🧠 AI-generated song list using OpenAI
-- 🎧 Accurate track matching via Spotify Search API
-- ⏱️ Playlist duration matches your mood length (e.g., ~10 mins ≈ 3 songs)
-- ✅ One playlist per prompt, even if multiple moods are mentioned
-- 🌐 AWS Lambda + DynamoDB + API Gateway for serverless backend
-- 🔐 Spotify OAuth login to create real user playlists
-- 💾 Saved playlist history (temp + final)
-- 📦 Full-stack, production-ready and deployable to Vercel
+- 🧠 **AI-generated playlist** using OpenAI GPT-3.5-Turbo
+- 🎧 **Accurate track matching** via Spotify Search API + smart fallback logic
+- ⏱️ **Duration-controlled playlists** (loops until playlist matches or exceeds requested length)
+- 🚫 **No duplicate artists** (max 2 songs per artist)
+- 🔁 **One playlist per prompt** — same prompt won’t create duplicate playlists
+- 🔐 **Spotify OAuth login** — export playlist to your own Spotify account
+- 🌐 **Public playlist export** — shared account option for non-auth users
+- 💾 **Playlist metadata saved** to AWS DynamoDB (prompt, songs, duration, taste, Spotify URL)
+- 📬 **Contact form** with AWS SES email integration
+- ✅ **Full-stack, serverless architecture**, production deployed
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- Next.js 15 + React
-- Tailwind CSS (UI styling)
-- Spotify Web API (OAuth + playlist creation)
+
+- **Next.js 15** + React
+- **Tailwind CSS** (custom UI)
+- **NextAuth.js** (Google OAuth login)
+- **Spotify Web API** (OAuth + playlist creation)
+- Custom branding (Melofy logos, About, ToS, Privacy, Contact pages)
 
 ### Backend
-- AWS Lambda (Node.js)
-- API Gateway (REST)
-- DynamoDB (playlist storage)
-- OpenAI API (chat completions for playlist ideas)
+
+- **AWS Lambda** (Node.js) — serverless compute
+- **API Gateway** — REST endpoints
+- **DynamoDB** — playlist storage + caching
+- **OpenAI API** — GPT-based playlist generation
+- **AWS SES** — email sending for Contact form
+
+### DevOps
+
+- **Vercel** — Frontend + Serverless backend
+- **AWS Route 53** — DNS + custom domain
+- **GitHub** — Version control
 
 ---
 
-## 🔧 Key API Routes
+## 🔧 Key API Routes (Current)
 
 | Route                  | Method | Description                           |
 |------------------------|--------|---------------------------------------|
 | `/api/login`           | GET    | Redirects to Spotify OAuth login      |
-| `/api/callback`        | GET    | Handles Spotify callback, syncs data  |
-| `/generate-playlist`   | POST   | Generates songs using OpenAI          |
-| `/prepare-playlist`    | POST   | Saves draft playlist to DynamoDB      |
-| `/get-playlist?id=...` | GET    | Fetches playlist from DynamoDB by ID  |
-| `/save-playlist`       | POST   | Saves final playlist to DynamoDB      |
+| `/api/callback`        | GET    | Handles Spotify callback + playlist sync |
+| `/generate-playlist`   | POST   | Calls OpenAI to generate song list    |
+| `/prepare-playlist`    | POST   | Saves draft playlist in DynamoDB      |
+| `/get-playlist?id=...` | GET    | Fetches playlist metadata from DynamoDB |
+| `/save-playlist`       | POST   | Saves final playlist metadata in DynamoDB |
+| `/api/contact`         | POST   | Sends Contact form email via AWS SES  |
 
 ---
+
 ## 🧪 How It Works
 
-1. User enters a *prompt*, e.g., `"study music while it's raining"` and chooses duration.
-2. Melofy uses OpenAI to generate a vibe-accurate list of songs.
-3. Songs are saved as a **draft** in DynamoDB.
-4. User is redirected to Spotify login.
-5. After login, Melofy:
-   - Fetches the draft.
-   - Matches songs using `track:{title} artist:{artist}`.
-   - Replaces missing tracks with similar ones if needed.
-   - Creates + fills a real Spotify playlist.
-6. Final playlist is saved + user is redirected to Spotify.
+1. User enters:
+   - A **prompt** (e.g., `"study music while it's raining"`)
+   - **Duration** in minutes
+   - Optional **Taste** preference (Trending, Chill, Underrated)
+
+2. Melofy sends this data to OpenAI and generates a playlist:
+   - Max 2 songs per artist
+   - Duration ≈ requested minutes
+   - Vibe and mood focused
+
+3. Draft playlist saved to DynamoDB.
+
+4. User chooses:
+   - **View Public Playlist** — sync to shared Spotify account
+   - **Export to My Spotify** — requires Spotify login (OAuth)
+
+5. If logged in:
+   - Melofy matches tracks via Spotify Search API
+   - Fallbacks used to ensure no missing tracks
+   - Creates real Spotify playlist
+   - Final playlist saved to DynamoDB with Spotify URL
+   - User redirected to Spotify playlist page
+
+6. User can submit feedback via **Contact page** (email via AWS SES).
 
 ---
 
-## 🚀 Deployment
+## 🎨 UI / UX Features
 
-Deployed via:
-- Vercel (Frontend)
-- AWS Lambda (Backend)
-- GitHub (Codebase)
-- Route 53 + Custom Domain (`nyanlinhtut.com`)
+- Fully responsive UI with light/dark theme
+- Polished playlist display:
+  - Numbered list
+  - Clean spacing
+  - White text in dark mode
+- Sticky header with login state awareness
+- Updated favicon + logo branding
+- Custom About, Terms of Service, Privacy Policy, Contact pages
+- Google OAuth login integrated in Header + Profile page
+- Public vs Private playlist UX clearly explained to user
 
 ---
 
-## ✅ To-Do (Post-MVP Phase)
+## 📦 Deployment
 
-- Add Spotify user profile screen
-- Add public playlist gallery
-- Improve fallback search for non-English songs
-- Add user login system via AWS Cognito
-- Calibrate duration to match user input more precisely
-- Re-generate playlist option
-- Dashboard of previously generated playlists
+- **Frontend:** Vercel
+- **Backend:** AWS Lambda via API Gateway
+- **Storage:** DynamoDB
+- **Email:** AWS SES
+- **Domain:** [https://www.melofyapp.com](https://www.melofyapp.com) (managed via Route 53)
+
+---
+
+## 🚀 Roadmap (Post-MVP Phase 2 & 3)
+
+### Short-Term (Phase 2)
+
+- 🗂️ Implement AWS Cognito **user login system** (real user database)
+- 🕹️ **User playlist dashboard** — see history of generated playlists
+- 🎛️ **Re-generate playlist** option — allow users to tweak/retry prompts
+- 🎭 Add **public playlist gallery** — optionally share best playlists
+- 🌍 Improve **fallback search for non-English songs** (Japanese, Burmese, etc.)
+- 🎼 Smarter **duration calibration** — even closer match to requested length
+
+### Long-Term (Phase 3)
+
+- 🎨 Polish **mobile UX** (Framer Motion animations, improved responsiveness)
+- 🛡️ Harden OAuth flow and ensure idempotency (fix duplicate playlist creation bug)
+- 🌎 SEO optimization (meta tags, sitemap, Google Search Console)
+- 📊 Add user analytics / engagement tracking
+- ⚙️ Add admin dashboard for playlist moderation (future SaaS idea)
 
 ---
 
 ## 👨‍💻 Author
 
-Created by [Nyan Lin Htut](https://nyanlinhtut.com)
+Created by [Nyan Lin Htut](https://www.melofyapp.com)
 
-- 💼 Business Analytics + AI Developer
-- ✉️ Contact: nyanlinhtutrain@gmail.com
+- 💼 Full stack AI/Software Developer
+- ✉️ Contact: nyanlinhtut662003@gmail.com
 - 🌐 GitHub: [@NyanLinHtutRain](https://github.com/NyanLinHtutRain)
 
 ---
@@ -96,3 +150,6 @@ Created by [Nyan Lin Htut](https://nyanlinhtut.com)
 ## 📄 License
 
 MIT License © 2025
+
+---
+
