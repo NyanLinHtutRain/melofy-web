@@ -89,7 +89,7 @@ const TermsOfServicePage = () => {
 
             <h3 className="mb-4 text-xl font-semibold text-black dark:text-white">9. Contact Us</h3>
             <p className="mb-6 text-base text-body-color dark:text-body-color-dark">
-              If you have any questions about these Terms, please contact us at: [Your Contact Email or Link to Contact Page]
+              If you have any questions about these Terms, please contact us at contact page.
             </p>
           </div>
         </div>
